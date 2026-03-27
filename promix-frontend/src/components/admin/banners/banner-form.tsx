@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { ImagePlus, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,6 +49,9 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
   const router = useRouter();
   const isEditing = !!bannerId;
   const [loading, setLoading] = useState(false);
+  const [uploadingField, setUploadingField] = useState<string | null>(null);
+  const imageRef = useRef<HTMLInputElement>(null);
+  const mobileImageRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     title: initialData?.title || "",
@@ -62,11 +67,27 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
     sort_order: initialData?.sort_order || 0,
   });
 
-  const updateField = (
-    key: string,
-    value: string | number | boolean,
-  ) => {
+  const updateField = (key: string, value: string | number | boolean) => {
     setForm((f) => ({ ...f, [key]: value }));
+  };
+
+  const handleImageUpload = async (field: "image" | "mobile_image", file: File) => {
+    setUploadingField(field);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("collection", "banners");
+      const res = await api.post("/admin/media/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const url = res.data.data?.url || res.data.url;
+      updateField(field, url);
+      toast.success("Görsel yüklendi.");
+    } catch {
+      toast.error("Görsel yüklenirken hata oluştu.");
+    } finally {
+      setUploadingField(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,18 +111,102 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
     try {
       if (isEditing) {
         await api.put(`/admin/banners/${bannerId}`, payload);
-        toast.success("Banner guncellendi.");
+        toast.success("Banner güncellendi.");
       } else {
         await api.post("/admin/banners", payload);
-        toast.success("Banner olusturuldu.");
+        toast.success("Banner oluşturuldu.");
       }
       router.push("/admin/bannerlar");
     } catch {
-      toast.error("Bir hata olustu.");
+      toast.error("Bir hata oluştu.");
     } finally {
       setLoading(false);
     }
   };
+
+  function ImageUploadField({
+    label,
+    field,
+    inputRef,
+  }: {
+    label: string;
+    field: "image" | "mobile_image";
+    inputRef: React.RefObject<HTMLInputElement | null>;
+  }) {
+    const value = form[field];
+    const isUploading = uploadingField === field;
+
+    return (
+      <div className="space-y-2">
+        <Label>{label}</Label>
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          ref={inputRef}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleImageUpload(field, f);
+            e.target.value = "";
+          }}
+        />
+        {value ? (
+          <div className="space-y-2">
+            <div className="relative h-40 overflow-hidden rounded-lg border bg-muted">
+              <Image src={value} alt={label} fill className="object-cover" unoptimized />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isUploading}
+                onClick={() => inputRef.current?.click()}
+              >
+                {isUploading ? <><Loader2 className="mr-1.5 size-4 animate-spin" />Yükleniyor</> : <><ImagePlus className="mr-1.5 size-4" />Değiştir</>}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-red-600"
+                onClick={() => updateField(field, "")}
+              >
+                <Trash2 className="mr-1.5 size-4" />Kaldır
+              </Button>
+            </div>
+            <Input
+              value={value}
+              onChange={(e) => updateField(field, e.target.value)}
+              placeholder="veya URL girin"
+              className="text-xs"
+            />
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <button
+              type="button"
+              disabled={isUploading}
+              onClick={() => inputRef.current?.click()}
+              className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-muted-foreground/50"
+            >
+              {isUploading ? (
+                <span className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-5 animate-spin" />Yükleniyor...</span>
+              ) : (
+                <span className="flex flex-col items-center gap-1 text-muted-foreground"><ImagePlus className="size-6" /><span className="text-xs">Görsel yükle</span></span>
+              )}
+            </button>
+            <Input
+              value={value}
+              onChange={(e) => updateField(field, e.target.value)}
+              placeholder="veya görsel URL'si girin"
+              className="text-xs"
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -112,7 +217,7 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Baslik</Label>
+              <Label>Başlık</Label>
               <Input
                 value={form.title}
                 onChange={(e) => updateField("title", e.target.value)}
@@ -120,34 +225,10 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label>Alt Baslik</Label>
+              <Label>Alt Başlık</Label>
               <Input
                 value={form.subtitle}
-                onChange={(e) =>
-                  updateField("subtitle", e.target.value)
-                }
-                placeholder="Opsiyonel"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Gorsel URL</Label>
-              <Input
-                value={form.image}
-                onChange={(e) => updateField("image", e.target.value)}
-                placeholder="https://... veya /uploads/..."
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Mobil Gorsel URL</Label>
-              <Input
-                value={form.mobile_image}
-                onChange={(e) =>
-                  updateField("mobile_image", e.target.value)
-                }
+                onChange={(e) => updateField("subtitle", e.target.value)}
                 placeholder="Opsiyonel"
               />
             </div>
@@ -159,17 +240,15 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
               <Input
                 value={form.link}
                 onChange={(e) => updateField("link", e.target.value)}
-                placeholder="Opsiyonel - orn: /urunler"
+                placeholder="Opsiyonel - örn: /proteinini-olustur"
               />
             </div>
             <div className="space-y-2">
               <Label>Buton Metni</Label>
               <Input
                 value={form.button_text}
-                onChange={(e) =>
-                  updateField("button_text", e.target.value)
-                }
-                placeholder="Opsiyonel - orn: Alisdverise Basla"
+                onChange={(e) => updateField("button_text", e.target.value)}
+                placeholder="Opsiyonel - örn: Keşfet"
               />
             </div>
           </div>
@@ -182,10 +261,24 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <option value="hero">Hero Banner</option>
-              <option value="sidebar">Sidebar Banner</option>
-              <option value="category_promo">Kategori Promo</option>
+              <option value="lifestyle">Lifestyle Gallery</option>
+              <option value="process">Süreç Kartları</option>
               <option value="fullwidth_promo">Tam Genişlik Promo</option>
+              <option value="sidebar">Sidebar</option>
+              <option value="category_promo">Kategori Promo</option>
             </select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Görseller</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <ImageUploadField label="Banner Görseli" field="image" inputRef={imageRef} />
+            <ImageUploadField label="Mobil Görsel (Opsiyonel)" field="mobile_image" inputRef={mobileImageRef} />
           </div>
         </CardContent>
       </Card>
@@ -197,43 +290,35 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Baslangic Tarihi</Label>
+              <Label>Başlangıç Tarihi</Label>
               <Input
                 type="datetime-local"
                 value={form.starts_at}
-                onChange={(e) =>
-                  updateField("starts_at", e.target.value)
-                }
+                onChange={(e) => updateField("starts_at", e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label>Bitis Tarihi</Label>
+              <Label>Bitiş Tarihi</Label>
               <Input
                 type="datetime-local"
                 value={form.expires_at}
-                onChange={(e) =>
-                  updateField("expires_at", e.target.value)
-                }
+                onChange={(e) => updateField("expires_at", e.target.value)}
               />
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Siralama</Label>
+              <Label>Sıralama</Label>
               <Input
                 type="number"
                 value={form.sort_order}
-                onChange={(e) =>
-                  updateField("sort_order", Number(e.target.value))
-                }
+                onChange={(e) => updateField("sort_order", Number(e.target.value))}
               />
             </div>
             <div className="flex items-center gap-2 pt-6">
               <Switch
                 checked={form.is_active}
-                onCheckedChange={(checked) =>
-                  updateField("is_active", checked)
-                }
+                onCheckedChange={(checked) => updateField("is_active", checked)}
               />
               <Label>Aktif</Label>
             </div>
@@ -242,19 +327,11 @@ export function BannerForm({ bannerId, initialData }: BannerFormProps) {
       </Card>
 
       <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/admin/bannerlar")}
-        >
-          Iptal
+        <Button type="button" variant="outline" onClick={() => router.push("/admin/bannerlar")}>
+          İptal
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading
-            ? "Kaydediliyor..."
-            : isEditing
-              ? "Guncelle"
-              : "Olustur"}
+          {loading ? "Kaydediliyor..." : isEditing ? "Güncelle" : "Oluştur"}
         </Button>
       </div>
     </form>
