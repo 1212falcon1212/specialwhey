@@ -25,11 +25,21 @@ interface Banner {
   mobile_image: string | null;
   link: string | null;
   button_text: string | null;
+  position: string;
   starts_at: string | null;
   expires_at: string | null;
   is_active: boolean;
   sort_order: number;
 }
+
+const POSITION_LABELS: Record<string, string> = {
+  hero: "Hero Banner",
+  lifestyle: "Lifestyle Gallery",
+  process: "Süreç Kartları",
+  fullwidth_promo: "Tam Genişlik Promo",
+  sidebar: "Sidebar",
+  category_promo: "Kategori Promo",
+};
 
 export function BannerListPage() {
   const [page, setPage] = useState(1);
@@ -89,7 +99,7 @@ export function BannerListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                {Array.from({ length: 6 }).map((_, i) => (
+                {Array.from({ length: 7 }).map((_, i) => (
                   <TableHead key={i}>
                     <Skeleton className="h-4 w-24" />
                   </TableHead>
@@ -99,7 +109,7 @@ export function BannerListPage() {
             <TableBody>
               {Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 6 }).map((_, j) => (
+                  {Array.from({ length: 7 }).map((_, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -119,7 +129,8 @@ export function BannerListPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Gorsel</TableHead>
-                <TableHead>Baslik</TableHead>
+                <TableHead>Başlık</TableHead>
+                <TableHead>Pozisyon</TableHead>
                 <TableHead>Link</TableHead>
                 <TableHead>Durum</TableHead>
                 <TableHead>Sira</TableHead>
@@ -151,6 +162,11 @@ export function BannerListPage() {
                         </div>
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs">
+                      {POSITION_LABELS[banner.position] || banner.position}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {banner.link || "-"}
