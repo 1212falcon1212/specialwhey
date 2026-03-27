@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useApi } from "@/hooks/use-api";
+import type { Banner } from "@/types/ingredient";
 
 const STEPS = [
   {
@@ -45,6 +49,9 @@ const STEPS = [
 ];
 
 export function OrderFlow() {
+  const { data } = useApi<Banner[]>("/storefront/banners?position=process");
+  const banners = data?.data ?? [];
+
   return (
     <section className="overflow-hidden bg-[#f5f5f3] py-20 md:py-28">
       <div className="container mx-auto px-4">
@@ -73,6 +80,8 @@ export function OrderFlow() {
           <div className="space-y-16 lg:space-y-24">
             {STEPS.map((step, i) => {
               const isEven = i % 2 === 0;
+              const bannerImage = banners[i]?.image;
+              const imageSrc = bannerImage || step.image;
 
               return (
                 <div key={step.number} className="relative">
@@ -88,7 +97,7 @@ export function OrderFlow() {
                     <div className={`${isEven ? "lg:order-1" : "lg:order-2"}`}>
                       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
                         <Image
-                          src={step.image}
+                          src={imageSrc}
                           alt={step.title}
                           fill
                           className="object-cover"
