@@ -1,0 +1,39 @@
+# Claude Code Hooks - ProMix Backend (Laravel)
+# Dosya: .claude/hooks.json
+# Bu dosyayı promix-backend/.claude/hooks.json olarak yerleştir
+
+{
+  "hooks": {
+    "pre-commit": [
+      {
+        "name": "Laravel Pint - Kod Formatlama",
+        "command": "./vendor/bin/pint --dirty",
+        "description": "Commit öncesi değişen PHP dosyalarını Laravel Pint ile formatlar"
+      },
+      {
+        "name": "PHP Syntax Check",
+        "command": "find $(git diff --cached --name-only --diff-filter=ACM | grep '\\.php$') -exec php -l {} \\; 2>/dev/null || true",
+        "description": "PHP syntax hatalarını kontrol eder"
+      }
+    ],
+    "post-file-edit": [
+      {
+        "name": "Pint - Dosya Formatla",
+        "command": "if echo $CLAUDE_FILE | grep -q '\\.php$'; then ./vendor/bin/pint $CLAUDE_FILE; fi",
+        "description": "Düzenlenen PHP dosyasını anında formatlar"
+      }
+    ],
+    "pre-push": [
+      {
+        "name": "Test Suite",
+        "command": "php artisan test --stop-on-failure",
+        "description": "Push öncesi tüm testleri çalıştırır"
+      },
+      {
+        "name": "Migration Kontrolü",
+        "command": "php artisan migrate:status | grep -q 'Pending' && echo '⚠️  Bekleyen migration var!' || echo '✅ Migration güncel'",
+        "description": "Bekleyen migration olup olmadığını kontrol eder"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+# Claude Code Hooks - ProMix Frontend (Next.js)
+# Dosya: .claude/hooks.json
+# Bu dosyayı promix-frontend/.claude/hooks.json olarak yerleştir
+
+{
+  "hooks": {
+    "pre-commit": [
+      {
+        "name": "Prettier - Kod Formatlama",
+        "command": "npx prettier --write $(git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(tsx?|jsx?|css|json)$' | tr '\\n' ' ')",
+        "description": "Commit öncesi değişen dosyaları Prettier ile formatlar"
+      },
+      {
+        "name": "ESLint Check",
+        "command": "npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(tsx?|jsx?)$' | tr '\\n' ' ') --max-warnings=0",
+        "description": "Değişen dosyalarda ESLint kontrolü yapar"
+      },
+      {
+        "name": "TypeScript Check",
+        "command": "npx tsc --noEmit --pretty",
+        "description": "TypeScript tip kontrolü yapar"
+      }
+    ],
+    "post-file-edit": [
+      {
+        "name": "Prettier - Dosya Formatla",
+        "command": "if echo $CLAUDE_FILE | grep -qE '\\.(tsx?|jsx?|css|json)$'; then npx prettier --write $CLAUDE_FILE; fi",
+        "description": "Düzenlenen dosyayı anında formatlar"
+      }
+    ],
+    "pre-push": [
+      {
+        "name": "Build Check",
+        "command": "npm run build",
+        "description": "Push öncesi production build kontrolü yapar"
+      }
+    ]
+  }
+}

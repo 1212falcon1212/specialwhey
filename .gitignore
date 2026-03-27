@@ -1,0 +1,40 @@
+# Dependencies
+promix-frontend/node_modules/
+promix-backend/vendor/
+
+# Environment files
+.env
+.env.local
+.env.production
+promix-backend/.env
+promix-frontend/.env
+promix-frontend/.env.local
+
+# Build outputs
+promix-frontend/.next/
+promix-frontend/out/
+
+# Laravel
+promix-backend/storage/logs/*
+promix-backend/storage/framework/cache/*
+promix-backend/storage/framework/sessions/*
+promix-backend/storage/framework/views/*
+promix-backend/bootstrap/cache/*
+!promix-backend/storage/logs/.gitkeep
+!promix-backend/storage/framework/cache/.gitkeep
+!promix-backend/storage/framework/sessions/.gitkeep
+!promix-backend/storage/framework/views/.gitkeep
+!promix-backend/bootstrap/cache/.gitkeep
+
+# Database
+promix-backend/database/database.sqlite
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Claude
+.claude/
