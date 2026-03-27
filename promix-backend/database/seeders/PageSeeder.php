@@ -13,18 +13,23 @@ class PageSeeder extends Seeder
             ['slug' => 'hakkimizda'],
             [
                 'title' => 'Hakkımızda',
-                'content' => '<h2>ProMix Hakkında</h2>
-<p>ProMix, sporcuların ve sağlıklı yaşam tutkunlarının ihtiyaçlarına özel, kişiselleştirilmiş protein karışımları sunan yenilikçi bir platformdur.</p>
-<p>Misyonumuz, herkesin kendi vücut yapısına ve hedeflerine uygun protein formülünü kolayca oluşturabilmesini sağlamaktır.</p>
-<h3>Neden ProMix?</h3>
+                'content' => '<h2>Special Whey Hakkında</h2>
+<p>Special Whey, Türkiye\'nin ilk kişiye özel protein paketi platformudur. Bileşenlerini sen seç, paketini biz gönderelim felsefesiyle yola çıktık.</p>
+<p>Herkesin vücudu, hedefleri ve tercihleri farklıdır. Hazır paketlerdeki tek tip formüller yerine, kendi bileşenlerini seçebileceğin bir sistem kurduk. Whey protein mi, izolat mı? Çikolata mı, vanilya mı? BCAA eklemek ister misin? Karar tamamen senin.</p>
+<h3>Nasıl Çalışıyoruz?</h3>
+<p>Seçtiğin bileşenler ayrı ayrı paketlenir ve shaker bidonunla birlikte kapına kadar gelir. Karışımı ne zaman, ne oranda yapacağına sen karar verirsin.</p>
+<h3>Neden Biz?</h3>
 <ul>
-<li>Yüksek kaliteli, sertifikalı hammaddeler</li>
-<li>Kişiye özel karışım oluşturma</li>
-<li>Şeffaf besin değerleri</li>
-<li>Hızlı ve güvenli teslimat</li>
-</ul>',
-                'meta_title' => 'Hakkımızda | ProMix',
-                'meta_description' => 'ProMix hakkında bilgi edinin. Kişiselleştirilmiş protein karışımları ile tanışın.',
+<li>Sertifikalı üreticilerden temin edilen kaliteli bileşenler</li>
+<li>Tamamen kişiye özel paket oluşturma</li>
+<li>Şeffaf içerik ve besin değerleri</li>
+<li>Aynı gün kargo, hızlı teslimat</li>
+<li>Koşulsuz iade garantisi</li>
+</ul>
+<h3>Vizyonumuz</h3>
+<p>Spor beslenme alanında herkesin kendi ihtiyacına uygun ürünlere kolayca ulaşabildiği bir platform olmak. Kaliteden ödün vermeden, şeffaf ve güvenilir bir alışveriş deneyimi sunmak.</p>',
+                'meta_title' => 'Hakkımızda | Special Whey',
+                'meta_description' => 'Special Whey hakkında bilgi edinin. Kişiye özel protein paketleri.',
                 'is_active' => true,
                 'sort_order' => 1,
             ]
@@ -35,13 +40,13 @@ class PageSeeder extends Seeder
             [
                 'title' => 'İletişim',
                 'content' => '<h2>Bize Ulaşın</h2>
-<p>Sorularınız ve önerileriniz için bize ulaşabilirsiniz.</p>
-<p><strong>E-posta:</strong> info@promix.com.tr</p>
+<p>Sorularınız, önerileriniz veya işbirliği teklifleriniz için bize ulaşabilirsiniz.</p>
+<p><strong>E-posta:</strong> info@specialwhey.com</p>
 <p><strong>Telefon:</strong> +90 212 000 00 00</p>
 <p><strong>Adres:</strong> İstanbul, Türkiye</p>
 <p><strong>Çalışma Saatleri:</strong> Pazartesi - Cuma, 09:00 - 18:00</p>',
-                'meta_title' => 'İletişim | ProMix',
-                'meta_description' => 'ProMix ile iletişime geçin. Sorularınız için bize yazın.',
+                'meta_title' => 'İletişim | Special Whey',
+                'meta_description' => 'Special Whey ile iletişime geçin. Sorularınız için bize yazın.',
                 'is_active' => true,
                 'sort_order' => 2,
             ]
@@ -65,8 +70,8 @@ class PageSeeder extends Seeder
 <h3>Ödeme</h3>
 <p><strong>S: Hangi ödeme yöntemlerini kabul ediyorsunuz?</strong></p>
 <p>C: Şu an havale/EFT ile ödeme kabul ediyoruz.</p>',
-                'meta_title' => 'SSS | ProMix',
-                'meta_description' => 'ProMix hakkında sıkça sorulan sorular ve cevapları.',
+                'meta_title' => 'SSS | Special Whey',
+                'meta_description' => 'Special Whey hakkında sıkça sorulan sorular ve cevapları.',
                 'is_active' => true,
                 'sort_order' => 3,
             ]

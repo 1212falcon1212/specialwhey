@@ -2,8 +2,7 @@ import { HeroBanner } from "@/components/storefront/home/hero-banner";
 import { JarConfigurator } from "@/components/storefront/home/jar-configurator";
 import { IntroText } from "@/components/storefront/home/intro-text";
 import { MarqueeTicker } from "@/components/storefront/home/marquee-ticker";
-import { LifestyleGallery } from "@/components/storefront/home/lifestyle-gallery";
-import { HowItWorks } from "@/components/storefront/home/how-it-works";
+import { OrderFlow } from "@/components/storefront/home/order-flow";
 import { WhyPromix } from "@/components/storefront/home/why-promix";
 import { IngredientsShowcase } from "@/components/storefront/home/ingredients-showcase";
 import { SplitBanner } from "@/components/storefront/home/split-banner";
@@ -18,8 +17,7 @@ export default function Home() {
       <IntroText />
       <JarConfigurator />
       <MarqueeTicker />
-      <LifestyleGallery />
-      <HowItWorks />
+      <OrderFlow />
       <IngredientsShowcase />
       <WhyPromix />
       <SplitBanner />

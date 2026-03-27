@@ -1,14 +1,11 @@
 import { StaticPageContent } from "@/components/storefront/pages/static-page-content";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Sıkça Sorulan Sorular | Special Whey",
+export const metadata: Metadata = {
+  title: "Sıkça Sorulan Sorular",
   description: "Special Whey hakkında sıkça sorulan sorular ve cevapları.",
 };
 
-export default function SikcaSorulanSorularPage() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <StaticPageContent slug="sikca-sorulan-sorular" />
-    </div>
-  );
+export default function Page() {
+  return <StaticPageContent slug="sikca-sorulan-sorular" />;
 }
