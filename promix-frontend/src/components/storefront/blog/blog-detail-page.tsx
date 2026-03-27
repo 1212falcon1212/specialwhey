@@ -121,7 +121,7 @@ export function BlogDetailPage({ params }: BlogDetailPageProps) {
       {/* Content */}
       {post.content && (
         <div
-          className="prose prose-lg mt-8 max-w-none text-muted-foreground prose-headings:text-foreground prose-a:text-[#ff6b2c] prose-a:no-underline hover:prose-a:underline"
+          className="blog-content mt-8 max-w-none text-[#555555] leading-relaxed"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       )}

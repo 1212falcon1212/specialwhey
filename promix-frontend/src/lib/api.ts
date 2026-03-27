@@ -30,7 +30,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       if (typeof window !== "undefined") {
         localStorage.removeItem("sw-auth-token");
-        window.location.href = "/giris";
+        const isAdmin = window.location.pathname.startsWith("/admin");
+        window.location.href = isAdmin ? "/admin/giris" : "/giris";
       }
     }
     return Promise.reject(error);
