@@ -24,7 +24,7 @@ class UpdateBannerRequest extends FormRequest
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'starts_at' => ['nullable', 'date'],
             'expires_at' => ['nullable', 'date', 'after:starts_at'],
-            'position' => ['nullable', 'string', 'in:hero,sidebar,category_promo,fullwidth_promo'],
+            'position' => ['nullable', 'string', 'in:hero,sidebar,category_promo,fullwidth_promo,lifestyle,process'],
         ];
     }
 
