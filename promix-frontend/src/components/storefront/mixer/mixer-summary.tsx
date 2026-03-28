@@ -3,17 +3,32 @@
 import { useMixerStore } from "@/stores/mixer-store";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/utils";
+import { AnimatedJar } from "@/components/shared/animated-jar";
 
 export function MixerSummary() {
-  const { selectedProtein, selectedFlavor, selectedExtras, selectedBidon, totalPrice } =
+  const { currentStep, selectedProtein, selectedFlavor, selectedExtras, selectedBidon, totalPrice } =
     useMixerStore();
 
   const hasItems =
     selectedProtein || selectedFlavor || selectedExtras.length > 0 || selectedBidon;
 
+  // Step-based fill: 0→0%, seçim yapılınca adım tamamlanır
+  const stepFills = [
+    selectedProtein ? 25 : 0,
+    selectedFlavor ? 25 : 0,
+    selectedExtras.length > 0 ? 25 : 0,
+    selectedBidon ? 25 : 0,
+  ];
+  const fillPercent = Math.min(100, stepFills.reduce((a, b) => a + b, 0));
+
   return (
     <div className="sticky top-24 rounded-xl border border-[#eeeeee] bg-white p-5">
-      <h3 className="text-sm font-bold uppercase tracking-wide text-[#888888]">
+      {/* Animated Jar */}
+      <div className="flex justify-center mb-4">
+        <AnimatedJar fillPercent={fillPercent} width={100} height={130} />
+      </div>
+
+      <h3 className="text-sm font-bold uppercase tracking-wide text-[#888888] text-center">
         PAKETİN
       </h3>
 

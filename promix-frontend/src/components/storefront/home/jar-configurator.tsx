@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useTransition } from "react";
 import Link from "next/link";
+import { AnimatedJar } from "@/components/shared/animated-jar";
 
 const DEMO_INGREDIENTS = [
   { id: 1, name: "Whey Protein", desc: "Kas yapıcı baz" },
@@ -37,13 +38,16 @@ const JAR_CENTER = { x: 300, y: 300 };
 export function JarConfigurator() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
+  const [, startTransition] = useTransition();
 
   const toggle = useCallback((id: number) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+    startTransition(() => {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
     });
   }, []);
 
@@ -91,19 +95,7 @@ export function JarConfigurator() {
 
             {/* Jar */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="w-[140px] h-[28px] rounded-t-xl bg-[#e0e0e0] border border-b-0 border-[#cccccc] z-10" />
-              <div className="relative w-[200px] h-[280px] rounded-b-2xl border border-[#cccccc] bg-white overflow-hidden">
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#ff6b2c]/40 to-[#ff6b2c]/15 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-                  style={{ height: `${fillPercent}%` }}
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                  <span className="text-xs font-bold text-[#888888] uppercase tracking-wider">
-                    Special Whey
-                  </span>
-                  <span className="text-[10px] text-[#aaaaaa]">Your Blend</span>
-                </div>
-              </div>
+              <AnimatedJar fillPercent={fillPercent} width={200} height={280} />
               <p className="mt-4 text-sm text-[#888888]">
                 <span className="font-bold text-[#ff6b2c]">{selected.size}</span>{" "}
                 bileşen seçildi
@@ -143,19 +135,7 @@ export function JarConfigurator() {
         {/* ==================== MOBILE ==================== */}
         <div className="lg:hidden">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-[100px] h-[20px] rounded-t-xl bg-[#e0e0e0] border border-b-0 border-[#cccccc]" />
-            <div className="relative w-[150px] h-[200px] rounded-b-2xl border border-[#cccccc] bg-white overflow-hidden">
-              <div
-                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#ff6b2c]/40 to-[#ff6b2c]/15 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-                style={{ height: `${fillPercent}%` }}
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                <span className="text-xs font-bold text-[#888888] uppercase tracking-wider">
-                  Special Whey
-                </span>
-                <span className="text-[10px] text-[#aaaaaa]">Your Blend</span>
-              </div>
-            </div>
+            <AnimatedJar fillPercent={fillPercent} width={140} height={190} />
             <p className="mt-3 text-sm text-[#888888]">
               <span className="font-bold text-[#ff6b2c]">{selected.size}</span>{" "}
               bileşen seçildi
