@@ -110,10 +110,10 @@ export function JarConfigurator() {
                 <button
                   key={ing.id}
                   onClick={() => toggle(ing.id)}
-                  className={`absolute rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                  className={`group/pill absolute rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
                     isSelected
-                      ? "bg-[#e55a1f] text-white shadow-[0_6px_20px_rgba(255,107,44,0.4)]"
-                      : "bg-[#ff6b2c] text-white hover:bg-[#e55a1f] hover:shadow-[0_4px_14px_rgba(255,107,44,0.3)]"
+                      ? "bg-[#ff6b2c] text-white shadow-[0_6px_20px_rgba(255,107,44,0.35)]"
+                      : "bg-white text-[#ff6b2c] border-2 border-[#ff6b2c] hover:bg-[#ff6b2c] hover:text-white"
                   }`}
                   style={{
                     top: pos.top,
@@ -123,7 +123,7 @@ export function JarConfigurator() {
                   }}
                 >
                   {ing.name}
-                  <span className="ml-1.5 text-xs text-white/70 hidden xl:inline">
+                  <span className={`ml-1.5 text-xs hidden xl:inline transition-colors duration-300 ${isSelected ? "text-white/70" : "text-[#ff6b2c]/60 group-hover/pill:text-white/70"}`}>
                     {ing.desc}
                   </span>
                 </button>
@@ -151,8 +151,8 @@ export function JarConfigurator() {
                   onClick={() => toggle(ing.id)}
                   className={`rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300 ${
                     isSelected
-                      ? "bg-[#e55a1f] text-white shadow-[0_6px_20px_rgba(255,107,44,0.4)]"
-                      : "bg-[#ff6b2c] text-white hover:bg-[#e55a1f]"
+                      ? "bg-[#ff6b2c] text-white shadow-[0_6px_20px_rgba(255,107,44,0.35)]"
+                      : "bg-white text-[#ff6b2c] border-2 border-[#ff6b2c]"
                   }`}
                 >
                   {ing.name}
